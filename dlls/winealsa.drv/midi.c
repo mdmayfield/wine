@@ -929,10 +929,14 @@ static DWORD modData(WORD wDevID, DWORD dwParam)
 		case 0x01:	/* MTC Quarter frame */
 		case 0x03:	/* Song Select. */
 		    {
-			BYTE buf[2];
+		        BYTE buf[2];
 			buf[0] = evt;
 			buf[1] = d1;
-			snd_seq_ev_set_sysex(&event, sizeof(buf), buf);
+			snd_midi_event_t *midi_event;
+		        snd_midi_event_new(1, &midi_event);
+		        snd_midi_event_init(midi_event);
+		        snd_midi_event_encode(midi_event, buf, sizeof(buf), &event);
+		        snd_midi_event_free(midi_event);
 	            }
 	            break;
 		case 0x02:	/* Song Position Pointer. */
